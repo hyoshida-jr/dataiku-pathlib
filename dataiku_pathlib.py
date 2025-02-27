@@ -4,7 +4,7 @@ from fnmatch import fnmatch
 from io import BytesIO, StringIO
 from PIL import Image
 import numpy as np
-from typing import Union, Optional, List, IO, Tuple
+from typing import Union, Optional, List, IO, Tuple, Dict
 import numpy.typing as ntp
 
 class Folder(dataiku.Folder):
@@ -60,6 +60,12 @@ class Path:
         encoded_data = data.encode(encoding=encoding, errors=errors)
         self.write_bytes(encoded_data)
 
+    def read_json(self) -> Dict:
+        return self.folder.read_json(self.path)
+
+    def write_json(self, object: object):
+        return self.folder.write_json(self.path, object)
+    
     def imread(self) -> ntp.NDArray:
         buffer = self.read_bytes()
         image = Image.open(BytesIO(buffer))
