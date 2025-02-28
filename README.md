@@ -15,16 +15,10 @@ A feature to use Dataiku's Managed Folder like a pathlib.
 **`open(path: str, mode: str = 'r', encoding: Optional[str] = None, errors: Optional[str] = 'strict') -> IO:`**
 指定されたパスのファイルを開きます。
 
-**`__truediv__(key):`**
-'/'演算子を使用してPathオブジェクトを生成します。
-
 ## Pathクラス
 このクラスは、ファイルシステムのパスを表現し、様々なファイル操作メソッドを提供します。
 
 ### メソッド
-**`__init__(folder: Folder, path: str):`**
-Pathオブジェクトを初期化します。
-
 **`read_bytes() -> bytes:`**
 ファイルの内容をバイト列として読み込みます。
 
