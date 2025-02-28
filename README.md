@@ -116,3 +116,103 @@ NumPy配列またはPIL画像をファイルに書き込みます。
 
 **`parents:`**
 全ての親ディレクトリのPathオブジェクトのリストを返します。
+
+## 使用例
+
+### Folderオブジェクトの作成
+```python
+from dataiku_pathlib import Folder, Path
+
+# Folderオブジェクトの作成
+folder = Folder("sample")
+output_folder = Folder("sample_output")
+
+print(repr(folder))
+# 出力: <dataiku_pathlib.Folder object at 0x7fbd7858c8b
+```
+
+### Folderオブジェクトの操作
+```python
+# dataiku.Folderを継承しているので、同じメソッドが使える
+# フォルダの内容をクリア
+output_folder.clear()
+```
+
+### ファイルの検索(glob)
+```python
+# JPGファイルの検索
+image_files = folder.glob('*.jpg')
+print(image_files)
+# 出力: [Path('/4.jpg'), Path('/5.jpg'), Path('/6.jpg'), Path('/a/b/0.jpg'), Path('/sub/1.jpg'), Path('/sub/2.jpg'), Path('/sub/3.jpg')]
+```
+
+### ファイルのリネーム
+```python
+# ファイルのリネーム
+for i, file in enumerate(image_files):
+    file.replace(file.with_stem(str(i*10)))
+
+image_files = folder.glob('*.jpg')
+print(image_files)
+# 出力: [Path('/0.jpg'), Path('/10.jpg'), Path('/20.jpg'), Path('/a/b/30.jpg'), Path('/sub/40.jpg'), Path('/sub/50.jpg'), Path('/sub/60.jpg')]
+```
+
+### '/'演算子を使用してパスを生成
+```python
+path1 = folder / "subfolder" / "file.txt"
+print(path1)  # 出力: Path('subfolder/file.txt')
+
+path2 = folder / "subfolder/another/file.txt"
+print(path2)  # 出力: Path('subfolder/another/file.txt')
+```
+
+### 既存のPathオブジェクトから新しいパスを生成
+```python
+base_path = Path(folder, "base")
+new_path = base_path / "subfolder" / "file.txt"
+print(new_path)  # 出力: Path('base/subfolder/file.txt')
+```
+
+### 文字列から直接Pathオブジェクトを生成
+```python
+path3 = Path(folder, "direct/path/to/file.txt")
+print(path3)  # 出力: Path('direct/path/to/file.txt')
+```
+
+### パスの一部を変更
+```python
+path4 = path3.with_name("newfile.txt")
+print(path4)  # 出力: Path('direct/path/to/newfile.txt')
+```
+
+### 拡張子の変更
+```python
+path5 = path4.with_suffix(".csv")
+print(path5)  # 出力: Path('direct/path/to/newfile.csv')
+```
+
+### 親ディレクトリの取得
+```python
+parent = path5.parent
+print(parent)  # 出力: Path('direct/path/to')
+```
+
+### 画像の読み込み
+```python
+image_path = folder / "0.jpg"
+image_array = image_path.imread()
+
+print(type(image_array))  # 出力: <class 'numpy.ndarray'>
+print(image_array.shape)  # 出力: (height, width, channels)
+```
+
+### 画像の書き込み
+```python
+# NumPy配列から画像を保存
+output_path = output_folder / "output.png"
+output_path.imwrite(image_array)
+
+# 別の形式で保存（JPEGの場合、品質も指定可能）
+jpeg_path = output_folder / "output.jpg"
+jpeg_path.imwrite(image_array, quality=95)
+```
